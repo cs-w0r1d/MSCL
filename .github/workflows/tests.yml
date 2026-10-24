@@ -1,0 +1,20 @@
+name: Synthetic tests
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+      - run: python -m pip install -e .
+      - run: python -m pip install torch --index-url https://download.pytorch.org/whl/cpu
+      - run: python -m unittest discover -s tests -v
+      - run: python tools/check_release.py
+      - run: python examples/make_synthetic.py
+      - run: mscl-evaluate survival --input outputs/synthetic/survival.csv --comparisons examples/comparisons.json --bootstrap 100 --output outputs/survival_demo
+      - run: mscl-evaluate markers --input outputs/synthetic/markers.csv --comparisons examples/comparisons.json --bootstrap 100 --output outputs/marker_demo
+      - run: mscl-evaluate spatial --input outputs/synthetic/cluster_tokens.npz --output outputs/spatial_demo

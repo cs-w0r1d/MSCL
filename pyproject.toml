@@ -1,0 +1,26 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "mscl-evaluation"
+version = "0.1.0"
+description = "Inference and evaluation utilities for Multi-Stain Contrastive Learning"
+readme = "README.md"
+requires-python = ">=3.10"
+license = {file = "LICENSE"}
+dependencies = [
+    "numpy>=1.26,<3", "pandas>=2.1,<3", "scipy>=1.11,<2",
+    "scikit-learn>=1.4,<2", "lifelines>=0.30,<0.31",
+    "matplotlib>=3.8,<4", "h5py>=3.10,<4",
+]
+
+[project.optional-dependencies]
+inference = ["torch>=2.6,<3"]
+
+[project.scripts]
+mscl-evaluate = "mscl_eval.cli:main"
+mscl-extract = "mscl_eval.inference:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
